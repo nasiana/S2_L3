@@ -49,3 +49,45 @@ print(worker_function_numbers(1))
 print(worker_function_numbers(80))
 
 print(worker_function_strings('supercalifragilisticexpialidocious'))
+
+'''
+Exercise 2 - Remember, why dontcha?
+We didn't have enough time to do this in the session so Hassan ran through it
+'''
+
+import time
+
+class MemoizeDecorator:
+    def __init__(self, function):
+        self.cache = {}
+        self.function = function
+
+    def __call__(self, *args, **kwargs):
+        key = str(args) + str(kwargs)
+        if key in self.cache:
+            print("I did not run a function, just fetched a result for you! :)")
+            return self.cache[key]
+
+        value = self.function(*args, **kwargs)
+        self.cache[key] = value
+        return value
+
+
+@MemoizeDecorator
+def worker_function_numbers(num):
+    time.sleep(1)
+    total_sum = 0
+    for n in range(num):
+        total_sum = total_sum + sum([(i/2 + 5) for i in range(1000)])
+    return total_sum
+
+
+## run worker function many times with different arguments
+
+for i in range(5):
+    print(worker_function_numbers(i))
+
+print(worker_function_numbers.cache)
+#
+## run again to see check a value was cached
+print(worker_function_numbers(3))
